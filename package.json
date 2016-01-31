@@ -18,6 +18,7 @@
     "gulp-load-plugins": "^1.2.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-wiredep": "0.0.0",
+    "gulp-inject": "^3.0.0",
     "jshint-stylish": "^2.1.0",
     "wiredep": "^3.0.0"
   }

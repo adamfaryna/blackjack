@@ -1,0 +1,6 @@
+app.service('gameService', [function() {
+
+
+
+
+}]);

@@ -1,2 +1,3 @@
 app
-	.constant('componentsPath', 'js/app/components');
+	.constant('componentsPath', 'app/components')
+	.constant('colors', ['clubs', 'diamonds', 'hearts', 'pikes']);

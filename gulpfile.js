@@ -1,6 +1,7 @@
 var gulp         = require('gulp');
 var browserSync  = require('browser-sync').create();
 var $            = require('gulp-load-plugins')();
+var wiredep      = require('wiredep');
 
 gulp.task('lint', function() {
   return gulp.src(['public/app/**/*.js', 'gulpfile.js'])
@@ -10,7 +11,7 @@ gulp.task('lint', function() {
 
 // Compile less into CSS & auto-inject into browsers
 gulp.task('less', function() {
-  return gulp.src(paths.less)
+  return gulp.src('less/*.less')
     .pipe($.less())
     .pipe($.autoprefixer({
       browsers: ['last 2 versions'],
@@ -25,7 +26,7 @@ gulp.task('inject', function() {
 
   return gulp.src('./public/index.html')
     .pipe($.inject(inject_res, { addRootSlash: false, read: false, relative: true }))
-    .pipe(wiredep({
+    .pipe($.wiredep({
       src: './public/index.html',
       directory: './public/bower_components'
     }))
@@ -33,14 +34,15 @@ gulp.task('inject', function() {
 });
 
 // Static Server + watching files
-gulp.task('serve', ['lint', 'less', 'inject'], function() {
+gulp.task('serve', ['less', 'inject'], function() { // 'lint',
   browserSync.init({
     browser: ['firefox'],
     server: 'public/',
     port: '3000'
   });
 
-  gulp.watch(['./public/*.*', '!./public/bower_components']).on('change', browserSync.reload);
+  gulp.watch('./less/*.less', ['less']);
+  gulp.watch(['./public/**/*.*', '!./public/bower_components']).on('change', browserSync.reload);
 });
 
 gulp.task('default', ['serve']);

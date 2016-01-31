@@ -14,17 +14,34 @@
   <!-- endbower -->
 
   <!-- inject:css -->
+  <link rel="stylesheet" href="css/style.css">
   <!-- endinject -->
 
   <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <!-- endbower -->
 
   <!-- inject:js -->
+  <script src="app/app.js"></script>
+  <script src="app/config.js"></script>
+  <script src="app/constants.js"></script>
+  <script src="app/game/gameCtrl.js"></script>
+  <script src="app/service/dealer.service.js"></script>
+  <script src="app/service/deck.service.js"></script>
+  <script src="app/service/game.service.js"></script>
+  <script src="app/service/player.service.js"></script>
+  <script src="app/components/dealerTable/dealerTable.directive.js"></script>
+  <script src="app/components/playerTable/playerTable.directive.js"></script>
   <!-- endinject -->
 </head>
 
-<body ng-app="blackjack">
+<body ng-app="blackjack" ng-strict-di>
   <div id="container">
+    <header>
+      <h1>Blackjack</h1>
+    </header>
     <div ui-view id="content"></div>
     <footer>
       <div class="inner">
