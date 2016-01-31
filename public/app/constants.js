@@ -1,3 +1,3 @@
 app
 	.constant('componentsPath', 'app/components')
-	.constant('colors', ['clubs', 'diamonds', 'hearts', 'pikes']);
+	.constant('cardColors', ['clubs', 'diamonds', 'hearts', 'pikes']);

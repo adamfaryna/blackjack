@@ -1,19 +1,24 @@
 app.factory('playerService', [function() {
   'use strict';
 
-  function Player() {
-
-  }
-
-  function Dealer() {
-
-  }
-
-  Dealer.prototype = Player;
+  var playersNumber = 0;
 
   return {
-    newPlayer: function (isDealer) {
-      return isDealer ? new Dealer() : new Player();
+    newPlayer: function(isDealer, nick) {
+      ++playersNumber;
+
+      if (isDealer) {
+        return new Dealer();
+
+      } else {
+        return new Player(nick);
+      }
+    },
+    removePlayer: function() {
+      --playersNumber;
+    },
+    countPlayers: function() {
+      return playersNumber;
     }
   };
 }]);

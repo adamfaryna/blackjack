@@ -1,14 +1,14 @@
 <header>
-  <h2>Player {{name}}</h2>
+  <h2>{{player.nick}} sum {{player.cardsSum}}</h2>
 </header>
 <section class="cards">
   <div class="cards-holder"></div>
 </section>
-<section class="commands">
+<section class="commands" ng-show="showCommands()">
   <header>
     <h2>Commands</h2>
   </header>
-  <button ng-click="buyInsurance()">BUY INSURANCE</button>
+  <button ng-click="buyInsurance()" ng-hide="player.insuranceBought">BUY INSURANCE</button>
   <button ng-click="hit()">HIT</button>
   <button ng-click="stand()">STAND</button>
 </section>

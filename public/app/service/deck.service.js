@@ -1,4 +1,5 @@
-app.factory('deckService', [function() {
+app.factory('deckService', ['cardColors', function(cardColors) {
+  var deck;
 
   function Card(color, value) {
     this.color = color;
@@ -8,9 +9,9 @@ app.factory('deckService', [function() {
   function Deck() {
     this.cards = [];
 
-    for (var c = 1; c != 5; c++) {
+    for (var c = 0; c != cardColors.length; c++) {
       for (var v = 1; v != 14; v++) {
-        this.cards.push(new Card(c, v));
+        this.cards.push(new Card(cardColors[c], v));
       }
     }
   }
@@ -30,7 +31,11 @@ app.factory('deckService', [function() {
 
   return {
     newDeck: function() {
-      return new Deck();
+      deck = new Deck();
+      return deck;
+    },
+    getDeck: function() {
+      return deck;
     }
   };
 }]);

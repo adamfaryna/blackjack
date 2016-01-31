@@ -22,7 +22,7 @@ gulp.task('less', function() {
 });
 
 gulp.task('inject', function() {
-  var inject_res = gulp.src(['./public/app/**/*.js', './public/css/**/*.css'], {read: false});
+  var inject_res = gulp.src(['./public/app/**/*.js', './public/lib/*.js', './public/css/**/*.css'], {read: false});
 
   return gulp.src('./public/index.html')
     .pipe($.inject(inject_res, { addRootSlash: false, read: false, relative: true }))
