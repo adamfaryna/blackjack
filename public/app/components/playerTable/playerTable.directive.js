@@ -1,6 +1,9 @@
 app.directive('playerTable', ['componentsPath', function(componentsPath) {
   return {
     restrict: 'E',
+    scope: {
+      player: '='
+    },
     templateUrl: componentsPath + '/playerTable/playerTable.html',
     link: function(scope, elm, attrs) {
       scope.hit = function() {
@@ -8,6 +11,10 @@ app.directive('playerTable', ['componentsPath', function(componentsPath) {
       };
 
       scope.stand = function() {
+
+      };
+
+      scope.buyInsurance = function() {
 
       };
     }

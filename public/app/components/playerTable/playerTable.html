@@ -2,25 +2,13 @@
   <h2>Player {{name}}</h2>
 </header>
 <section class="cards">
-  <header>
-    <h2>Cards</h2>
-  </header>
-  <div class="cards-holder">
-    <card color="clubs" value="1"></card>
-    <card color="diamonds" value="1"></card>
-    <card color="hearts" value="1"></card>
-    <card color="pikes" value="1"></card>
-    <br>
-    <card color="clubs" value="2"></card>
-    <card color="diamonds" value="2"></card>
-    <card color="hearts" value="2"></card>
-    <card color="pikes" value="2"></card>
-  </div>
+  <div class="cards-holder"></div>
 </section>
-<section class="options">
+<section class="commands">
   <header>
-    <h2>Options</h2>
+    <h2>Commands</h2>
   </header>
+  <button ng-click="buyInsurance()">BUY INSURANCE</button>
   <button ng-click="hit()">HIT</button>
   <button ng-click="stand()">STAND</button>
 </section>
