@@ -1,5 +1,5 @@
-@card-height: 246px;
-@card-width: 168px;
+@card-height: 245px;
+@card-width: 167px;
 @card-margin: -3px;
 @card-width-with-margin: @card-width + @card-margin;
 @card-height-with-margin: @card-height + @card-margin;
@@ -28,16 +28,31 @@ player-table, dealer-table {
         height: @card-height;
       }
 
-      //[color="clubs"][value="1"] {
-      //  background-position: 0px -(0 * @card-height), top left;
-      //}
-
       .card(@color, @level) {
         .card-loop(@value) when (@value > 0) {
           .card-loop((@value - 1));
 
+          .set-this-card-width() when (@value = 1) {
+            @this-width-margin: 0px;
+          }
+
+          .set-this-card-width() when (@value > 1) {
+            @this-width-margin: 3px;
+          }
+
+          .set-this-card-height() when (@level > 0) {
+            @this-height-margin: -2px;
+          }
+
+          .set-this-card-height() when (@level = 0) {
+            @this-height-margin: 0px;
+          }
+
+          .set-this-card-width();
+          .set-this-card-height();
+
           [color="@{color}"][value="@{value}"] {
-            background-position: -((@value - 1) * @card-width) -(@level * @card-height-with-margin), top left;
+            background-position: (-((@value - 1) * @card-width) + @this-width-margin) -(@level * (@card-height + @this-height-margin)), top left;
           }
         }
 
@@ -48,25 +63,6 @@ player-table, dealer-table {
       .card("diamonds", 1);
       .card("hearts", 2);
       .card("pikes", 3);
-
-
-      //[color="diamonds"][value="1"] {
-      //  background-position: 0px -(1 * @card-width-with-margin), top left;
-      //}
-
-      //
-      //[color="diamonds"][value="1"] {
-      //  background-position: 0px -(1 * @card-width-with-margin), top left;
-      //}
-      //
-      //[color="hearts"][value="1"] {
-      //  background-position: 0px -(2 * @card-width-with-margin), top left;
-      //}
-      //
-      //[color="pikes"][value="1"] {
-      //  background-position: 0px -(3 * @card-width-with-margin), top left;
-      //}
-      //
     }
   }
 
