@@ -11,7 +11,9 @@ app.factory('playerService', [function() {
         return new Dealer();
 
       } else {
-        return new Player(nick);
+        var player = new Player(nick);
+        player.prototype = new Dealer();
+        return player;
       }
     },
     removePlayer: function() {

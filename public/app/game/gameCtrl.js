@@ -21,7 +21,6 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
     this.currentPlayerIndex = 1;
     this.players = [];
     this.players.push(playerService.newPlayer(true));
-    //this.players.push(playerService.newPlayer(false));
     this.deck = deckService.newDeck();
     this.deck.shuffle();
   }
@@ -49,7 +48,7 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
 
     infoService.info('Buy insurance, Hit or Stand');
 
-    $scope.$on('stand', function() {
+    $scope.$on('stand', function () {
       if (self.players.length === self.currentPlayerIndex) {
         self.currentPlayerIndex = 1;
         self.checkDealer();
@@ -66,6 +65,14 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
 
   $scope.addPlayer = function() {
     if ($scope.newPlayerName) {
+      for (var i = 0; i != $scope.game.players.length; i++) {
+        if ($scope.game.players[i].nick === $scope.newPlayerName) {
+          alert('User ' + $scope.newPlayerName + ' already exists, choose other name.');
+          $scope.newPlayerName = '';
+          return false;
+        }
+      }
+
       $scope.game.players.push(playerService.newPlayer(false, $scope.newPlayerName));
       $scope.newPlayerName = '';
     }
@@ -77,9 +84,6 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
       return false;
     }
 
-    //$scope.deckControl = {
-    //  getCard: $scope.game.deck.getCard
-    //};
     $scope.game.deal();
   };
 }]);

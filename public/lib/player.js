@@ -31,9 +31,12 @@ Dealer.prototype.cardsSum = function() {
 };
 
 function Player(nick) {
+  Dealer.call(this);
+
   this.nick = nick;
   this.inGame = true;
   this.insuranceBought = false;
 }
 
-Player.prototype = new Dealer();
+Player.prototype = Object.create(Dealer.prototype);
+Player.prototype.constructor = Player;

@@ -35,11 +35,12 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
           scope.player.loses += 1;
           scope.player.inGame = false;
           alert(scope.player.nick + ' loses!');
+          scope.stand();
         }
       };
 
       scope.stand = function() {
-        scope.$broadcast('stand');
+        scope.$emit('stand');
       };
 
       scope.buyInsurance = function() {
