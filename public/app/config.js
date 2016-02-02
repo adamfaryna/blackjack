@@ -1,5 +1,6 @@
+'use strict';
+
 app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider) {
-  'use strict';
 
   $urlRouterProvider.otherwise('/game');
 

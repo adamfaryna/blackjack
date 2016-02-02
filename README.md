@@ -1,6 +1,6 @@
 # Blackjack game
 
-This project uses AngularJS, JSHint, BrowserSync and Gulp.
+This project uses AngularJS, jQuery, jQuery UI, JSHint, BrowserSync, LESS and Gulp.
 
 Feel free to use it if you want.
 

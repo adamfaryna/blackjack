@@ -1,7 +1,8 @@
+'use strict';
+
 var gulp         = require('gulp');
 var browserSync  = require('browser-sync').create();
 var $            = require('gulp-load-plugins')();
-var wiredep      = require('wiredep');
 
 gulp.task('lint', function() {
   return gulp.src(['public/app/**/*.js', 'gulpfile.js'])
@@ -34,7 +35,7 @@ gulp.task('inject', function() {
 });
 
 // Static Server + watching files
-gulp.task('serve', ['less', 'inject'], function() { // 'lint',
+gulp.task('serve', ['less', 'lint', 'inject'], function() {
   browserSync.init({
     browser: ['firefox'],
     server: 'public/',

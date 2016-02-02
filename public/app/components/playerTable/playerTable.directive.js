@@ -15,15 +15,23 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
         }
       });
 
+      scope.$on('clear-table', function (e, playerNick) {
+        if (scope.player.nick === playerNick) {
+          $('.cards-holder', elm).empty();
+        }
+      });
+
       scope.$on('show-dealer-cards', function() {
-        if (isDealer()) {
+        if (scope.player.isDealer()) {
           $('.cards-holder .hidden', elm).attr({
             color: scope.player.cards[0].color,
             value: scope.player.cards[0].value
           }).removeClass('hidden');
 
           while (scope.player.cardsSum() < 18) {
-            scope.hit();
+            if (!scope.hit()) {
+              return;
+            }
           }
 
           scope.$emit('dealer-shown-cards');
@@ -34,7 +42,7 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
         var card = deckService.getDeck().getCard();
         var cardElem = $('<card>');
 
-        if (scope.player.cards.length === 0 && isDealer()) {
+        if (scope.player.cards.length === 0 && scope.player.isDealer()) {
           cardElem.attr('class', 'hidden');
 
         } else {
@@ -48,21 +56,20 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
         scope.player.cards.push(card);
 
         if (scope.player.cardsSum() > 21) {
-          if (isDealer()) {
+          if (scope.player.isDealer()) {
             scope.$emit('dealer-loses');
+            return false;
 
           } else {
-            scope.playerLoses();
+            scope.$emit('player-loses', scope.player.nick);
           }
         }
+
+        return true;
       };
 
       scope.stand = function() {
         scope.$emit('stand');
-      };
-
-      scope.playerLoses = function() {
-        scope.$emit('player-loses', scope.player.nick);
       };
 
       scope.buyInsurance = function() {
@@ -72,10 +79,6 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
       scope.showCommands = function() {
         return scope.isActive === 'true' && scope.player.inGame;
       };
-
-      function isDealer() {
-        return scope.player.nick === 'Dealer';
-      }
     }
   };
 }]);

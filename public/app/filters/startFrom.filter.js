@@ -1,6 +1,6 @@
-app.filter('startFrom', function() {
-  'use strict';
+'use strict';
 
+app.filter('startFrom', function() {
   return function(input, start) {
     if (input) {
       start = +start;
@@ -8,5 +8,5 @@ app.filter('startFrom', function() {
     }
 
     return [];
-  }
+  };
 });

@@ -1,9 +1,6 @@
 'use strict';
 
-app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckService', function ($scope, playerService, infoService, deckService) {
-
-  $scope.game = new Game();
-  $scope.newPlayerName = '';
+app.controller('GameCtrl', ['$q', '$scope', '$rootScope' ,'playerService', 'infoService', 'deckService', function ($q, $scope, $rootScope, playerService, infoService, deckService) {
 
   function Game() {
     this.stage = 0;
@@ -21,8 +18,8 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
     this.players.forEach(function(player, index) {
       infoService.info('Player ' + index);
 
-      for (var i = 0; i != 2; i++) {
-        $scope.$broadcast('hit', player.nick);
+      for (var i = 0; i !== 2; i++) {
+        $rootScope.$broadcast('hit', player.nick);
       }
     });
 
@@ -31,9 +28,55 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
 
   Game.prototype.buyHitStand = function() {
     infoService.info('Buy insurance, Hit or Stand');
-    var self = this;
-    self.stage = 2;
+    this.stage = 2;
   };
+
+  Game.prototype.checkDealer = function() {
+    this.stage = 3;
+    $rootScope.$broadcast('show-dealer-cards');
+  };
+
+  function anyPlayersLeftInGame() {
+    for (var i = 1; i !== $scope.game.players.length; i++) {
+      if ($scope.game.players[i].inGame) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function clearDealerTable() {
+    $rootScope.$broadcast('clear-table', 'Dealer');
+  }
+
+  function showDialog(message) {
+    var deferred = $q.defer();
+
+    $('body').on('dialogclose', function() {
+      $('body').off('dialogclose');
+      deferred.resolve();
+    });
+
+    $rootScope.$broadcast('show-dialog', {
+      message: message
+    });
+
+    return deferred.promise;
+  }
+
+  function finishGame() {
+    return showDialog('Game finished! Time for tea.').then(function() {
+      clearDealerTable();
+      infoService.info('');
+      $scope.game = new Game();
+    });
+  }
+
+  function dealerWins() {
+    showDialog('Dealer wins!');
+    finishGame();
+  }
 
   function anotherPlayerTurn() {
     $scope.game.currentPlayerIndex += 1;
@@ -48,29 +91,9 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
     }
   }
 
-  function anyPlayersLeftInGame() {
-    for (var i = 1; i != $scope.game.players.length; i++) {
-      if ($scope.game.players[i].inGame) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  Game.prototype.checkDealer = function() {
-    this.stage = 3;
-    $scope.$broadcast('show-dealer-cards');
-  };
-
-  function dealerWins() {
-    showDialog('Dealer wins!');
-    finishGame();
-  }
-
   $scope.addPlayer = function() {
     if ($scope.newPlayerName) {
-      for (var i = 0; i != $scope.game.players.length; i++) {
+      for (var i = 0; i !== $scope.game.players.length; i++) {
         if ($scope.game.players[i].nick === $scope.newPlayerName || 'Dealer' === $scope.newPlayerName) {
           showDialog('Player ' + $scope.newPlayerName + ' already exists, choose other name.');
           $scope.newPlayerName = '';
@@ -93,9 +116,9 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
   };
 
   $scope.$on('dealer-loses', function() {
-    var info = 'Dealer loses ';
+    var info = 'Dealer loses! ';
 
-    for (var i = 1; i != $scope.game.players.length; i++) {
+    for (var i = 1; i !== $scope.game.players.length; i++) {
       var player = $scope.game.players[i];
 
       if (player.inGame) {
@@ -103,14 +126,13 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
       }
     }
 
-    showDialog(info + ' all players wins!');
-    finishGame();
+    showDialog(info + ' all players wins!').then(finishGame);
   });
 
   $scope.$on('stand', anotherPlayerTurn);
 
   $scope.$on('player-loses', function(e, playerNick) {
-    for (var i = 1; i != $scope.game.players.length; i++) {
+    for (var i = 1; i !== $scope.game.players.length; i++) {
       var player = $scope.game.players[i];
 
       if (player.nick === playerNick) {
@@ -127,33 +149,26 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
   $scope.$on('dealer-shown-cards', function() {
     $scope.game.stage = 4;
     var dealerCardSum = $scope.game.players[0].cardsSum();
+    var message = '';
 
-    for (var i = 1; i != $scope.game.players.length; i++) {
+    for (var i = 1; i !== $scope.game.players.length; i++) {
       var playerCardSum = $scope.game.players[i].cardsSum();
 
       if (dealerCardSum === playerCardSum) {
-        showDialog('Player ' + $scope.game.players[i].nick + ' tie with Dealer!');
+        message += ' Player ' + $scope.game.players[i].nick + ' tie with Dealer!';
 
       } else if (dealerCardSum < playerCardSum) {
-        showDialog('Player ' + $scope.game.players[i].nick + ' wins!');
+        message += ' Player ' + $scope.game.players[i].nick + ' wins!';
 
       } else {
-        showDialog('Player ' + $scope.game.players[i].nick + ' loses!');
+        message += ' Player ' + $scope.game.players[i].nick + ' loses!';
       }
     }
 
+    infoService.info(message);
     finishGame();
   });
 
-  function showDialog(message) {
-    $scope.$emit('show-dialog', {
-      title: 'Info',
-      message: message
-    });
-  }
-
-  function finishGame() {
-    showDialog('Game finished! Time for tea.');
-    $scope.game = new Game();
-  }
+  $scope.game = new Game();
+  $scope.newPlayerName = '';
 }]);

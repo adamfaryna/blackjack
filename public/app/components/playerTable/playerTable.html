@@ -1,5 +1,5 @@
 <header>
-  <h2>{{player.nick}} sum {{player.cardsSum}}</h2>
+  <h2>{{player.nick}} {{player.isDealer() ? '' : ' - cards sum: ' + player.cardsSum()}}</h2>
 </header>
 <section class="cards">
   <div class="cards-holder"></div>

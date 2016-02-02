@@ -18,7 +18,7 @@ app.factory('playerService', [function() {
       sum += card.value > 10 ? 10 : card.value;
     });
 
-    for (var i = 0; i != aces; i++) {
+    for (var i = 0; i !== aces; i++) {
       if (sum + 10 > 21) {
         break;
       }
@@ -27,6 +27,10 @@ app.factory('playerService', [function() {
     }
 
     return sum;
+  };
+
+  Dealer.prototype.isDealer = function() {
+    return this.nick === 'Dealer';
   };
 
   function Player(nick) {

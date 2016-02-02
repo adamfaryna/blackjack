@@ -11,10 +11,10 @@
   </div>
   <div class="play-button" ng-hide="game.stage > 0">
     <button ng-click="play()">PLAY!</button>
-    <form name="form" novalidate>
+    <form name="newUserForm" novalidate>
       <button ng-click="addPlayer()">Add Player</button>
       <label>
-        Name
+        User Name:
         <input type="text" ng-model="newPlayerName" required>
       </label>
     </form>

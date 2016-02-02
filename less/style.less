@@ -3,6 +3,7 @@
 
 body {
   background: forestgreen;
+  font: normal normal normal 15px Arial, Helvetica, sans-serif;
 }
 
 #table {
@@ -64,14 +65,6 @@ player-table, dealer-table {
         .card-loop(@value) when (@value > 0) {
           .card-loop((@value - 1));
 
-          //.set-this-card-width() when (@value = 1) {
-          //  @this-width-margin: 0px;
-          //}
-          //
-          //.set-this-card-width() when (@value > 1) {
-          //  @this-width-margin: 0px;
-          //}
-
           .set-this-card-height() when (@level > 0) {
             @this-height-margin: -2px;
           }
@@ -114,8 +107,22 @@ player-table, dealer-table {
   }
 }
 
+.dialog {
+  font: normal normal normal 12px/1.5 Arial, Helvetica, sans-serif;
+}
+
+form[name="newUserForm"] {
+  padding: 10px;
+}
+
 dialog {
-  display: none;
+  p {
+    padding-left: 10px;
+  }
+
+  .ui-dialog .ui-dialog-buttonpane {
+    margin: 0;
+  }
 }
 
 footer {

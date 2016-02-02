@@ -11,8 +11,8 @@ app.factory('deckService', ['cardColors', function(cardColors) {
   function Deck() {
     this.cards = [];
 
-    for (var c = 0; c != cardColors.length; c++) {
-      for (var v = 1; v != 14; v++) {
+    for (var c = 0; c !== cardColors.length; c++) {
+      for (var v = 1; v !== 14; v++) {
         this.cards.push(new Card(cardColors[c], v));
       }
     }

@@ -1,21 +1,28 @@
 'use strict';
 
-app.directive('dialog', ['componentsPath', function(componentsPath) {
+app.directive('dialog', [function() {
   return {
     restrict: 'E',
     scope: {},
-    templateUrl: componentsPath + '/dialog/dialog.html',
+    template: '<p>{{message}}</p>',
     link: function (scope, elm) {
       scope.$on('show-dialog', function (e, data) {
-        scope.title = data.title;
         scope.message = data.message;
 
-        $('.dialog', elm).dialog('open');
+        var obj = $(elm);
+
+        obj.dialog({
+          title: data.title || 'Info'
+        });
+
+        obj.dialog('open');
       });
 
-      $('.dialog', elm).dialog({
+      $(elm).dialog({
+        dialogClass: 'dialog',
         modal: true,
-        //autoOpen: false,
+        resizable: false,
+        autoOpen: false,
         buttons: {
           ok: function() {
             $(this).dialog('close');
