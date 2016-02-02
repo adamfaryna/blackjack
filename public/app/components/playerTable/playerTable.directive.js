@@ -1,3 +1,5 @@
+'use strict';
+
 app.directive('playerTable', ['componentsPath', 'deckService', function(componentsPath, deckService) {
   return {
     restrict: 'E',
@@ -6,11 +8,25 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
       isActive: '@'
     },
     templateUrl: componentsPath + '/playerTable/playerTable.html',
-    link: function(scope, elm, attrs) {
-
+    link: function(scope, elm) {
       scope.$on('hit', function(e, playerNick) {
         if (scope.player.nick === playerNick) {
           scope.hit();
+        }
+      });
+
+      scope.$on('show-dealer-cards', function() {
+        if (isDealer()) {
+          $('.cards-holder .hidden', elm).attr({
+            color: scope.player.cards[0].color,
+            value: scope.player.cards[0].value
+          }).removeClass('hidden');
+
+          while (scope.player.cardsSum() < 18) {
+            scope.hit();
+          }
+
+          scope.$emit('dealer-shown-cards');
         }
       });
 
@@ -18,7 +34,7 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
         var card = deckService.getDeck().getCard();
         var cardElem = $('<card>');
 
-        if (scope.player.cards.length === 0 && !(scope.player instanceof Player)) {
+        if (scope.player.cards.length === 0 && isDealer()) {
           cardElem.attr('class', 'hidden');
 
         } else {
@@ -32,10 +48,12 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
         scope.player.cards.push(card);
 
         if (scope.player.cardsSum() > 21) {
-          scope.player.loses += 1;
-          scope.player.inGame = false;
-          alert(scope.player.nick + ' loses!');
-          scope.stand();
+          if (isDealer()) {
+            scope.$emit('dealer-loses');
+
+          } else {
+            scope.playerLoses();
+          }
         }
       };
 
@@ -43,13 +61,21 @@ app.directive('playerTable', ['componentsPath', 'deckService', function(componen
         scope.$emit('stand');
       };
 
+      scope.playerLoses = function() {
+        scope.$emit('player-loses', scope.player.nick);
+      };
+
       scope.buyInsurance = function() {
         scope.player.insuranceBought = true;
       };
 
       scope.showCommands = function() {
-        return (scope.player instanceof Player) && scope.isActive === 'true' && scope.player.inGame;
+        return scope.isActive === 'true' && scope.player.inGame;
       };
+
+      function isDealer() {
+        return scope.player.nick === 'Dealer';
+      }
     }
   };
 }]);

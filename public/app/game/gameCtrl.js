@@ -1,25 +1,14 @@
-app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckService', '$timeout', function ($scope, playerService, infoService, deckService, $timeout) {
-  'use strict';
+'use strict';
+
+app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckService', function ($scope, playerService, infoService, deckService) {
 
   $scope.game = new Game();
-  //$scope.gameOn = false;
-  //$scope.insuranceBought = false;
   $scope.newPlayerName = '';
-
-  var currentGame;
-
-  var gameStages = {
-    0: 'not started',
-    1: 'deal',
-    2: 'buy / hit / stand',
-    3: 'check dealer',
-    4: 'result'
-  };
 
   function Game() {
     this.stage = 0;
-    this.currentPlayerIndex = 1;
     this.players = [];
+    this.currentPlayerIndex = 1;
     this.players.push(playerService.newPlayer(true));
     this.deck = deckService.newDeck();
     this.deck.shuffle();
@@ -28,8 +17,6 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
   Game.prototype.deal = function() {
     var self = this;
     self.stage = 1;
-
-    //infoService.info('Lets deal!');
 
     this.players.forEach(function(player, index) {
       infoService.info('Player ' + index);
@@ -43,31 +30,49 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
   };
 
   Game.prototype.buyHitStand = function() {
+    infoService.info('Buy insurance, Hit or Stand');
     var self = this;
     self.stage = 2;
+  };
 
-    infoService.info('Buy insurance, Hit or Stand');
+  function anotherPlayerTurn() {
+    $scope.game.currentPlayerIndex += 1;
 
-    $scope.$on('stand', function () {
-      if (self.players.length === self.currentPlayerIndex) {
-        self.currentPlayerIndex = 1;
-        self.checkDealer();
+    if ($scope.game.players.length === $scope.game.currentPlayerIndex) {
+      if (!anyPlayersLeftInGame()) {
+        dealerWins();
         return;
       }
 
-      self.currentPlayerIndex += 1;
-    });
-  };
+      $scope.game.checkDealer();
+    }
+  }
+
+  function anyPlayersLeftInGame() {
+    for (var i = 1; i != $scope.game.players.length; i++) {
+      if ($scope.game.players[i].inGame) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   Game.prototype.checkDealer = function() {
-    self.stage = 3;
+    this.stage = 3;
+    $scope.$broadcast('show-dealer-cards');
   };
+
+  function dealerWins() {
+    showDialog('Dealer wins!');
+    finishGame();
+  }
 
   $scope.addPlayer = function() {
     if ($scope.newPlayerName) {
       for (var i = 0; i != $scope.game.players.length; i++) {
-        if ($scope.game.players[i].nick === $scope.newPlayerName) {
-          alert('User ' + $scope.newPlayerName + ' already exists, choose other name.');
+        if ($scope.game.players[i].nick === $scope.newPlayerName || 'Dealer' === $scope.newPlayerName) {
+          showDialog('Player ' + $scope.newPlayerName + ' already exists, choose other name.');
           $scope.newPlayerName = '';
           return false;
         }
@@ -80,10 +85,75 @@ app.controller('GameCtrl', ['$scope', 'playerService', 'infoService', 'deckServi
 
   $scope.play = function () {
     if ($scope.game.players.length === 1) {
-      alert('You must add at least one player.');
+      showDialog('You must add at least one player.');
       return false;
     }
 
     $scope.game.deal();
   };
+
+  $scope.$on('dealer-loses', function() {
+    var info = 'Dealer loses ';
+
+    for (var i = 1; i != $scope.game.players.length; i++) {
+      var player = $scope.game.players[i];
+
+      if (player.inGame) {
+        info += ' ' + player.nick;
+      }
+    }
+
+    showDialog(info + ' all players wins!');
+    finishGame();
+  });
+
+  $scope.$on('stand', anotherPlayerTurn);
+
+  $scope.$on('player-loses', function(e, playerNick) {
+    for (var i = 1; i != $scope.game.players.length; i++) {
+      var player = $scope.game.players[i];
+
+      if (player.nick === playerNick) {
+        player.inGame = false;
+        player.loses += 1;
+        showDialog('Player ' + player.nick + ' loses!');
+        break;
+      }
+    }
+
+    anotherPlayerTurn();
+  });
+
+  $scope.$on('dealer-shown-cards', function() {
+    $scope.game.stage = 4;
+    var dealerCardSum = $scope.game.players[0].cardsSum();
+
+    for (var i = 1; i != $scope.game.players.length; i++) {
+      var playerCardSum = $scope.game.players[i].cardsSum();
+
+      if (dealerCardSum === playerCardSum) {
+        showDialog('Player ' + $scope.game.players[i].nick + ' tie with Dealer!');
+
+      } else if (dealerCardSum < playerCardSum) {
+        showDialog('Player ' + $scope.game.players[i].nick + ' wins!');
+
+      } else {
+        showDialog('Player ' + $scope.game.players[i].nick + ' loses!');
+      }
+    }
+
+    finishGame();
+  });
+
+  function showDialog(message) {
+    $scope.$emit('show-dialog', {
+      title: 'Info',
+      message: message
+    });
+  }
+
+  function finishGame() {
+    showDialog('Game finished! Time for tea.');
+    $scope.game = new Game();
+  }
 }]);

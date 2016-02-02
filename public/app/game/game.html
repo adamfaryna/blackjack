@@ -1,5 +1,5 @@
 <div id="table">
-  <player-table ng-show="game.stage > 0" player="game.players[0]" class="player0"></player-table>
+  <player-table ng-show="game.stage > 0" player="game.players[0]"></player-table>
 
   <div class="info">
     <section>
@@ -21,8 +21,7 @@
   </div>
 
   <div>
-    <player-table player="player" class="player{{$index + 1}}"
-                  ng-repeat="player in game.players | startFrom : 1" ng-show="game.stage > 0"
+    <player-table player="player" ng-repeat="player in game.players | startFrom : 1" ng-show="game.stage > 0"
                   is-active="{{game.currentPlayerIndex === $index + 1 && game.stage == 2}}"></player-table>
   </div>
 </div>

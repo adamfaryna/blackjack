@@ -1,3 +1,5 @@
+'use strict';
+
 app.factory('deckService', ['cardColors', function(cardColors) {
   var deck;
 

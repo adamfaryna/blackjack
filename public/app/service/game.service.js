@@ -1,6 +1,0 @@
-app.service('gameService', [function() {
-
-
-
-
-}]);

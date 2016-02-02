@@ -11,6 +11,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.css" />
   <!-- endbower -->
 
   <!-- inject:css -->
@@ -21,22 +22,22 @@
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/jquery-ui/jquery-ui.js"></script>
   <!-- endbower -->
 
   <!-- inject:js -->
   <script src="app/app.js"></script>
   <script src="app/config.js"></script>
   <script src="app/constants.js"></script>
+  <script src="app/run.js"></script>
   <script src="app/filters/startFrom.filter.js"></script>
   <script src="app/game/gameCtrl.js"></script>
   <script src="app/service/dealer.service.js"></script>
   <script src="app/service/deck.service.js"></script>
-  <script src="app/service/game.service.js"></script>
   <script src="app/service/info.service.js"></script>
   <script src="app/service/player.service.js"></script>
-  <script src="app/components/dealerTable/dealerTable.directive.js"></script>
+  <script src="app/components/dialog/dialog.directive.js"></script>
   <script src="app/components/playerTable/playerTable.directive.js"></script>
-  <script src="lib/player.js"></script>
   <!-- endinject -->
 </head>
 
@@ -46,6 +47,7 @@
       <h1>Blackjack</h1>
     </header>
     <div ui-view id="content"></div>
+    <dialog></dialog>
     <footer>
       <div class="inner">
         <p>&copy; 2016, Adam Faryna. All rights reserved.</p>
