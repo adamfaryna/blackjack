@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('blackjack').factory('deckService', ['cardColors', function(cardColors) {
-
+angular.module('blackjack').service('deckService', ['cardColors', function(cardColors) {
   var deck;
 
   function Card(color, value) {
@@ -32,13 +31,12 @@ angular.module('blackjack').factory('deckService', ['cardColors', function(cardC
     return this.cards.pop();
   };
 
-  return {
-    newDeck: function() {
-      deck = new Deck();
-      return deck;
-    },
-    getDeck: function() {
-      return deck;
-    }
+  this.newDeck = function() {
+    deck = new Deck();
+    return deck;
+  };
+
+  this.getDeck = function() {
+    return deck;
   };
 }]);

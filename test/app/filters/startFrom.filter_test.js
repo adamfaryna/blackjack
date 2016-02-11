@@ -15,7 +15,7 @@ describe('blackjack module', function () {
                 "' is not the same as expected array '" + JSON.stringify(expected) + "'.";
 
             } else {
-              for (var i = 0; i != expected.length; i++) {
+              for (var i = 0; i !== expected.length; i++) {
                 if (actual[i] !== expected[i]) {
                   result.pass = false;
                   result.message = "Elements are not equal '" + actual[i] + " and " + expected[i] + "'.";
@@ -28,7 +28,7 @@ describe('blackjack module', function () {
           }
         };
       }
-    })
+    });
   });
 
   describe('startFrom filter', function () {
