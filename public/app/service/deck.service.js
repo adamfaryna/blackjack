@@ -1,6 +1,7 @@
 'use strict';
 
-app.factory('deckService', ['cardColors', function(cardColors) {
+angular.module('blackjack').factory('deckService', ['cardColors', function(cardColors) {
+
   var deck;
 
   function Card(color, value) {

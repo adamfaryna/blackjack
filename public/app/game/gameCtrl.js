@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('GameCtrl', ['$q', '$scope', '$rootScope' ,'playerService', 'infoService', 'deckService', function ($q, $scope, $rootScope, playerService, infoService, deckService) {
+angular.module('blackjack').controller('GameCtrl', ['$q', '$scope', '$rootScope' ,'playerService', 'infoService', 'deckService', function ($q, $scope, $rootScope, playerService, infoService, deckService) {
 
   function Game() {
     this.stage = 0;

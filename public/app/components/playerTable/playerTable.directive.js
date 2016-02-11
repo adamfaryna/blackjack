@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('playerTable', ['componentsPath', 'deckService', function(componentsPath, deckService) {
+angular.module('blackjack').directive('playerTable', ['componentsPath', 'deckService', function(componentsPath, deckService) {
   return {
     restrict: 'E',
     scope: {

@@ -1,6 +1,7 @@
 'use strict';
 
-app.factory('playerService', [function() {
+angular.module('blackjack').factory('playerService', [function() {
+
   function Dealer() {
     this.nick = 'Dealer';
     this.cards = [];

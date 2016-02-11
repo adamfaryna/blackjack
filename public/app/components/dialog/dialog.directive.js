@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('dialog', [function() {
+angular.module('blackjack').directive('dialog', [function() {
   return {
     restrict: 'E',
     scope: {},

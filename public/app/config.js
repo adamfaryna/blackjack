@@ -1,6 +1,6 @@
 'use strict';
 
-app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider) {
+angular.module('blackjack').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider, $urlRouterProvider, $httpProvider) {
 
   $urlRouterProvider.otherwise('/game');
 
